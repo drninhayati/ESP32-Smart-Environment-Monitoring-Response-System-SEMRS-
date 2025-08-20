@@ -1,0 +1,50 @@
+
+Komponen & Fungsinya
+
+| Komponen                       | Fungsi                                                      |
+| ------------------------------ | ----------------------------------------------------------- |
+| **ESP32**                      | Mikropengawal utama + WiFi IoT                              |
+| **Servo Motor FS90R**          | Kawalan fizikal automatik (pintu tingkap / penutup ruang)   |
+| **LED**                        | Penunjuk visual status sistem                               |
+| **Raindrops Module (MH-RD)**   | Mengesan kehadiran hujan                                    |
+| **MQ Sensor (MQ-2 / MQ-135)**  | Mengesan kebocoran gas / pencemaran udara                   |
+| **Water Float Sensor (CIB01)** | Mengesan paras air untuk amaran banjir / tangki air penuh   |
+| **DHT11**                      | Mengesan suhu dan kelembapan                                |
+| **Fan LD3007ms**               | Mengawal suhu (ON bila suhu tinggi)                         |
+| **Buzzer**                     | Amaran bunyi untuk bahaya (hujan, gas, suhu tinggi, banjir) |
+
+
+📈 Logik Sistem & Automasi
+
+| Keadaan Dikesan                        | Tindakan Automatik                                            |
+| -------------------------------------- | ------------------------------------------------------------- |
+| Hujan dikesan                          | Servo tutup tingkap, LED biru menyala, hantar status ke cloud |
+| Gas bocor dikesan                      | Buzzer aktif, LED merah menyala, hantar amaran                |
+| Paras air tinggi (banjir/tangki penuh) | Buzzer aktif, LED kuning, data dihantar ke platform IoT       |
+| Suhu > 30°C & kelembapan rendah        | Kipas ON, hantar data suhu ke cloud                           |
+| Semua normal                           | LED hijau menyala sebagai penunjuk status baik                |
+
+
+⚙️ Diagram Sambungan ESP32 – Semua Komponen
+
+| Komponen                      | Pin Sambungan ke ESP32             | Catatan                                  |
+| ----------------------------- | ---------------------------------- | ---------------------------------------- |
+| **DHT11**                     | Data → D4                          | Perlukan resistor 10KΩ antara Data & VCC |
+| **Raindrop Sensor (MH-RD)**   | AO → A0 (GPIO36)                   | Untuk nilai analog (kepekaan hujan)      |
+|                               | DO → D2 (optional)                 | Untuk digital output jika guna threshold |
+| **MQ Gas Sensor**             | AO → A3 (GPIO39)                   | Boleh juga guna DO → D15 (jika perlu)    |
+| **Water Float (CIB01)**       | DO → D13                           | GND → GND, VCC → 3.3V                    |
+| **Servo Motor (FS90R)**       | Signal → D18                       | Guna bekalan 5V luar jika motor kuat     |
+| **Fan (LD3007ms)**            | Positif → MOSFET → D27             | Guna relay/MOSFET driver + 5V            |
+| **LED (RGB or single color)** | R → D5, G → D17, B → D16           | Atau guna 1 LED: Signal → D14            |
+| **Buzzer**                    | Positif → D12                      | Aktif bila amaran, GND ke GND            |
+| **GND Semua**                 | Sambung ke GND ESP32               | Guna breadboard rail untuk kongsi GND    |
+| **VCC Semua**                 | 3.3V / 5V dari ESP32 / sumber luar | Pastikan cukup arus jika banyak komponen |
+
+
+🔌 Nota Tambahan
+
+Untuk motor & kipas: ESP32 tidak boleh bekalkan kuasa terus. Guna relay atau MOSFET module dan power supply 5V berasingan.
+Servo motor juga memerlukan 5V bekalan luar, jangan ambil dari 3.3V ESP32.
+Pastikan GND power supply luar disambung bersama GND ESP32.
+Tambahkan capacitor (100uF ke atas) pada servo dan fan supply untuk elakkan brownout.
