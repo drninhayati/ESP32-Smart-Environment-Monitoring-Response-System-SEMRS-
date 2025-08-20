@@ -1,0 +1,74 @@
+#define BLYNK_TEMPLATE_ID "YourTemplateID"
+#define BLYNK_DEVICE_NAME "YourDeviceName"
+#define BLYNK_AUTH_TOKEN "YourAuthToken"
+
+#include <WiFi.h>
+#include <BlynkSimpleEsp32.h>
+#include <DHT.h>
+#include <Servo.h>
+
+char ssid[] = "YourWiFi";
+char pass[] = "YourPassword";
+
+// PIN
+#define DHTPIN 4
+#define DHTTYPE DHT11
+#define RAINDROP_PIN 32
+#define MQ_PIN 33
+#define WATER_FLOAT_PIN 15
+#define SERVO_PIN 18
+#define FAN_PIN 27
+#define BUZZER_PIN 12
+
+DHT dht(DHTPIN, DHTTYPE);
+Servo myservo;
+
+BlynkTimer timer;
+
+void sendSensor() {
+  float t = dht.readTemperature();
+  float h = dht.readHumidity();
+  int rain = analogRead(RAINDROP_PIN);
+  int gas = analogRead(MQ_PIN);
+  int water = digitalRead(WATER_FLOAT_PIN);
+
+  Blynk.virtualWrite(V0, t);
+  Blynk.virtualWrite(V1, h);
+  Blynk.virtualWrite(V2, rain);
+  Blynk.virtualWrite(V3, gas);
+  Blynk.virtualWrite(V4, water);
+
+  // Auto Fan
+  digitalWrite(FAN_PIN, (t > 30.0) ? HIGH : LOW);
+
+  // Servo Logic
+  if (rain < 1000) {
+    myservo.write(0);
+  } else {
+    myservo.write(90);
+  }
+
+  // Buzzer Logic
+  if (gas > 1500 || water == LOW) {
+    digitalWrite(BUZZER_PIN, HIGH);
+  } else {
+    digitalWrite(BUZZER_PIN, LOW);
+  }
+}
+
+void setup() {
+  Serial.begin(115200);
+  Blynk.begin(BLYNK_AUTH_TOKEN, ssid, pass);
+  dht.begin();
+  myservo.attach(SERVO_PIN);
+
+  pinMode(FAN_PIN, OUTPUT);
+  pinMode(BUZZER_PIN, OUTPUT);
+
+  timer.setInterval(2000L, sendSensor); // every 2 seconds
+}
+
+void loop() {
+  Blynk.run();
+  timer.run();
+}
