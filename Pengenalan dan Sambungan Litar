@@ -27,19 +27,20 @@ Komponen & Fungsinya
 
 ⚙️ Diagram Sambungan ESP32 – Semua Komponen
 
-| Komponen                      | Pin Sambungan ke ESP32             | Catatan                                  |
-| ----------------------------- | ---------------------------------- | ---------------------------------------- |
-| **DHT11**                     | Data → D4                          | Perlukan resistor 10KΩ antara Data & VCC |
-| **Raindrop Sensor (MH-RD)**   | AO → A0 (GPIO36)                   | Untuk nilai analog (kepekaan hujan)      |
-|                               | DO → D2 (optional)                 | Untuk digital output jika guna threshold |
-| **MQ Gas Sensor**             | AO → A3 (GPIO39)                   | Boleh juga guna DO → D15 (jika perlu)    |
-| **Water Float (CIB01)**       | DO → D13                           | GND → GND, VCC → 3.3V                    |
-| **Servo Motor (FS90R)**       | Signal → D18                       | Guna bekalan 5V luar jika motor kuat     |
-| **Fan (LD3007ms)**            | Positif → MOSFET → D27             | Guna relay/MOSFET driver + 5V            |
-| **LED (RGB or single color)** | R → D5, G → D17, B → D16           | Atau guna 1 LED: Signal → D14            |
-| **Buzzer**                    | Positif → D12                      | Aktif bila amaran, GND ke GND            |
-| **GND Semua**                 | Sambung ke GND ESP32               | Guna breadboard rail untuk kongsi GND    |
-| **VCC Semua**                 | 3.3V / 5V dari ESP32 / sumber luar | Pastikan cukup arus jika banyak komponen |
+| **Komponen**             | **VCC**   | **GND**  | **Pin Data/Signal (ESP32)** | **Catatan**                                     |
+| ------------------------ | --------- | -------- | --------------------------- | ----------------------------------------------- |
+| **DHT11**                | 3.3V      | GND      | GPIO 4                      | Gunakan resistor pull-up 10kΩ antara VCC & data |
+| **Raindrop Sensor (AO)** | 3.3V      | GND      | GPIO 32                     | Bacaan analog kepekaan hujan                    |
+| **MQ Gas Sensor (AO)**   | 3.3V      | GND      | GPIO 33                     | Bacaan analog gas (MQ-2 / MQ-135)               |
+| **Water Float Switch**   | 3.3V      | GND      | GPIO 15                     | Input digital paras air (HIGH/LOW)              |
+| **Servo Motor FS90R**    | 5V (luar) | GND luar | GPIO 18                     | Bekalan luar, GND sambung ke GND ESP32          |
+| **Kipas (Fan + relay)**  | 5V (luar) | GND luar | GPIO 27                     | Guna relay/MOSFET; GND sambung ke ESP32 GND     |
+| **LED Merah**            | 3.3V      | GND      | GPIO 5                      | Tambah resistor 220–330Ω                        |
+| **LED Hijau**            | 3.3V      | GND      | GPIO 17                     | Sama seperti atas                               |
+| **LED Biru**             | 3.3V      | GND      | GPIO 16                     | Sama seperti atas                               |
+| **Buzzer Aktif**         | 3.3V      | GND      | GPIO 12                     | Bunyi apabila bahaya dikesan                    |
+
+
 
 
 🔌 Nota Tambahan
