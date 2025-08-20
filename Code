@@ -1,0 +1,109 @@
+//copy and paste coding di IDE
+//Pastikan anda install melalui Library Manager: DHT.h, Servo.h
+
+#include <DHT.h>
+#include <Servo.h>
+
+// ----------------------------
+// PIN DEFINITION
+// ----------------------------
+#define DHTPIN 4           // DHT11 pin
+#define DHTTYPE DHT11
+
+#define RAINDROP_PIN 36    // A0
+#define MQ_PIN 39          // A3
+#define WATER_FLOAT_PIN 13 // Water float switch
+
+#define SERVO_PIN 18
+#define FAN_PIN 27
+#define BUZZER_PIN 12
+
+#define LED_RED 5
+#define LED_GREEN 17
+#define LED_BLUE 16
+
+// ----------------------------
+// OBJECTS
+// ----------------------------
+DHT dht(DHTPIN, DHTTYPE);
+Servo myservo;
+
+void setup() {
+  Serial.begin(115200);
+  dht.begin();
+  myservo.attach(SERVO_PIN);
+
+  // Pin modes
+  pinMode(RAINDROP_PIN, INPUT);
+  pinMode(MQ_PIN, INPUT);
+  pinMode(WATER_FLOAT_PIN, INPUT);
+
+  pinMode(FAN_PIN, OUTPUT);
+  pinMode(BUZZER_PIN, OUTPUT);
+
+  pinMode(LED_RED, OUTPUT);
+  pinMode(LED_GREEN, OUTPUT);
+  pinMode(LED_BLUE, OUTPUT);
+}
+
+void loop() {
+  delay(2000); // Wait 2 seconds
+
+  // ----------------------------
+  // SENSOR READINGS
+  // ----------------------------
+  float temp = dht.readTemperature();
+  float hum = dht.readHumidity();
+  int rainValue = analogRead(RAINDROP_PIN); // Lower = more rain
+  int gasValue = analogRead(MQ_PIN);
+  int waterLevel = digitalRead(WATER_FLOAT_PIN);
+
+  Serial.println("===========");
+  Serial.print("Temp: "); Serial.println(temp);
+  Serial.print("Hum: "); Serial.println(hum);
+  Serial.print("Rain: "); Serial.println(rainValue);
+  Serial.print("Gas: "); Serial.println(gasValue);
+  Serial.print("Water Float: "); Serial.println(waterLevel);
+
+  // ----------------------------
+  // LED STATUS
+  // ----------------------------
+  if (rainValue < 1000) { // Hujan dikesan
+    digitalWrite(LED_BLUE, HIGH);
+    digitalWrite(LED_GREEN, LOW);
+    digitalWrite(LED_RED, LOW);
+    myservo.write(0); // Tutup tingkap
+  } else {
+    digitalWrite(LED_GREEN, HIGH); // Normal
+    digitalWrite(LED_BLUE, LOW);
+    digitalWrite(LED_RED, LOW);
+    myservo.write(90); // Buka tingkap
+  }
+
+  // ----------------------------
+  // GAS DETECTION
+  // ----------------------------
+  if (gasValue > 1500) {
+    digitalWrite(BUZZER_PIN, HIGH);
+    digitalWrite(LED_RED, HIGH);
+  } else {
+    digitalWrite(BUZZER_PIN, LOW);
+  }
+
+  // ----------------------------
+  // WATER FLOAT CHECK
+  // ----------------------------
+  if (waterLevel == LOW) { // Assuming LOW = air penuh
+    digitalWrite(BUZZER_PIN, HIGH);
+    digitalWrite(LED_RED, HIGH);
+  }
+
+  // ----------------------------
+  // FAN CONTROL
+  // ----------------------------
+  if (temp > 30.0) {
+    digitalWrite(FAN_PIN, HIGH); // Hidupkan kipas
+  } else {
+    digitalWrite(FAN_PIN, LOW);
+  }
+}
