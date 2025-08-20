@@ -1,0 +1,37 @@
+✅ 1. Perkara Diperlukan
+📱 Aplikasi & Platform
+
+Blynk IoT (versi baharu)
+Akaun di https://blynk.cloud/
+
+Aplikasi Blynk IoT di Android/iOS
+📦 Library
+Install: Blynk, DHT, Servo melalui Library Manager
+
+⚠️ Pakej Blynk
+Guna Template + Device (bukan legacy token)
+Gunakan Blynk Edgent (atau Blynk Simple ESP32) untuk sambungan WiFi
+
+🛠️ 2. Setup di Blynk Cloud
+🧱 Langkah Setup di Blynk Dashboard
+Log masuk ke https://blynk.cloud/
+Klik + New Template
+Name: Smart Environment Monitor
+Hardware: ESP32
+Connection: WiFi
+Klik Save
+
+Tambah Data Stream:
+Temperature → V0
+Humidity → V1
+Rain → V2
+Gas → V3
+WaterLevel → V4
+LED Control → V5 (optional Switch)
+
+Create New Device → From Template → Pilih template tadi
+
+Salin:
+Template ID
+Device Name
+Auth Token
