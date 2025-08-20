@@ -7,12 +7,12 @@
 // ----------------------------
 // PIN DEFINITION
 // ----------------------------
-#define DHTPIN 4           // DHT11 pin
+#define DHTPIN 4           // DHT11 data pin
 #define DHTTYPE DHT11
 
-#define RAINDROP_PIN 36    // A0
-#define MQ_PIN 39          // A3
-#define WATER_FLOAT_PIN 13 // Water float switch
+#define RAINDROP_PIN 32    // Raindrop analog
+#define MQ_PIN 33          // Gas sensor analog
+#define WATER_FLOAT_PIN 15 // Water float (digital)
 
 #define SERVO_PIN 18
 #define FAN_PIN 27
@@ -47,7 +47,7 @@ void setup() {
 }
 
 void loop() {
-  delay(2000); // Wait 2 seconds
+  delay(2000); // Delay 2s between readings
 
   // ----------------------------
   // SENSOR READINGS
@@ -60,10 +60,10 @@ void loop() {
 
   Serial.println("===========");
   Serial.print("Temp: "); Serial.println(temp);
-  Serial.print("Hum: "); Serial.println(hum);
-  Serial.print("Rain: "); Serial.println(rainValue);
-  Serial.print("Gas: "); Serial.println(gasValue);
-  Serial.print("Water Float: "); Serial.println(waterLevel);
+  Serial.print("Humidity: "); Serial.println(hum);
+  Serial.print("Rain Value: "); Serial.println(rainValue);
+  Serial.print("Gas Value: "); Serial.println(gasValue);
+  Serial.print("Water Float Status: "); Serial.println(waterLevel);
 
   // ----------------------------
   // LED STATUS
@@ -93,7 +93,7 @@ void loop() {
   // ----------------------------
   // WATER FLOAT CHECK
   // ----------------------------
-  if (waterLevel == LOW) { // Assuming LOW = air penuh
+  if (waterLevel == LOW) { // LOW = air penuh / banjir
     digitalWrite(BUZZER_PIN, HIGH);
     digitalWrite(LED_RED, HIGH);
   }
@@ -107,3 +107,4 @@ void loop() {
     digitalWrite(FAN_PIN, LOW);
   }
 }
+
