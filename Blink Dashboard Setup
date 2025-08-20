@@ -35,3 +35,13 @@ Salin:
 Template ID
 Device Name
 Auth Token
+
+4. Susun Atur Widget dalam App Blynk (Mobile)
+| **Komponen**      | **Type**    | **Datastream** |
+| ----------------- | ----------- | -------------- |
+| Temperature       | Gauge       | V0             |
+| Humidity          | Gauge       | V1             |
+| Rain Sensor       | Value       | V2             |
+| Gas Sensor        | Value       | V3             |
+| Water Level       | LED / Value | V4             |
+| LED Control (opt) | Switch      | V5             |
